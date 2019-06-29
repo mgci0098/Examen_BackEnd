@@ -41,9 +41,9 @@ namespace Lab3.Services
 
         private IUserUserRolesService userUserRolesService;
 
-        public UsersService(FilmeDbContext context, 
-            IRegisterValidator registerValidator, 
-            IUserUserRolesService userUserRolesService, 
+        public UsersService(FilmeDbContext context,
+            IRegisterValidator registerValidator,
+            IUserUserRolesService userUserRolesService,
             IOptions<AppSettings> appSettings)
         {
             this.context = context;
@@ -56,9 +56,11 @@ namespace Lab3.Services
         public LoginGetModel Authenticate(string username, string password)
         {
             var user = context.Users
+                .Include(u => u.UserUserRoles)
+                .ThenInclude(uur => uur.UserRole)
                 .AsNoTracking()
                 .FirstOrDefault(u => u.Username == username && u.Password == ComputeSha256Hash(password));
-            
+
             // return null if user not found
             if (user == null)
                 return null;
@@ -86,7 +88,8 @@ namespace Lab3.Services
                 Id = user.Id,
                 Email = user.Email,
                 UserName = user.Username,
-                Token = tokenHandler.WriteToken(token)
+                Token = tokenHandler.WriteToken(token),
+                UserRole = user.UserUserRoles.First(uur => uur.EndTime == null).UserRole.Name
             };
 
             return result;
@@ -166,7 +169,7 @@ namespace Lab3.Services
             //string accountType = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.AuthenticationMethod).Value;
             //return _context.Users.FirstOrDefault(u => u.Username == username && u.AccountType.ToString() == accountType);
 
-            User user =  context
+            User user = context
                 .Users
                 .Include(u => u.UserUserRoles)
                 .FirstOrDefault(u => u.Username == username);
@@ -228,8 +231,9 @@ namespace Lab3.Services
             var existing = context.Users.AsNoTracking().FirstOrDefault(u => u.Id == id);
             if (existing == null)
             {
+
                 User toAdd = UserPostModel.ToUser(userPostModel);
-                context.Users.Add(toAdd);     
+                context.Users.Add(toAdd);
                 context.SaveChanges();
                 return UserGetModel.FromUser(toAdd);
             }

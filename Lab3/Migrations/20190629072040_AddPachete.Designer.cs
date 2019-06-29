@@ -4,14 +4,16 @@ using CentruMultimedia.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Lab3.Migrations
 {
     [DbContext(typeof(FilmeDbContext))]
-    partial class FilmeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190629072040_AddPachete")]
+    partial class AddPachete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,10 +98,6 @@ namespace Lab3.Migrations
                     b.Property<string>("TaraOrigine");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CodTracking")
-                        .IsUnique()
-                        .HasFilter("[CodTracking] IS NOT NULL");
 
                     b.ToTable("Pachete");
                 });

@@ -21,6 +21,13 @@ namespace CentruMultimedia.Models
                 entity.HasIndex(u => u.Username).IsUnique();
             });
 
+            //unigue pe tracking
+            builder.Entity<Pachet>(entity =>
+            {
+                entity.HasIndex(p => p.CodTracking).IsUnique();
+            });
+
+
             builder.Entity<Comentariu>()
                 .HasOne(c => c.Film)
                 .WithMany(c => c.Comentarii)
@@ -50,6 +57,9 @@ namespace CentruMultimedia.Models
         public DbSet<UserRole> UserRoles { get; set; }
 
         public DbSet<UserUserRole> UserUserRoles { get; set; }
+
+        public DbSet<Pachet> Pachete { get; set; }
+        
 
     }
 }

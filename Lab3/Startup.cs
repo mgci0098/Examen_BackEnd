@@ -116,7 +116,7 @@ namespace Lab3
 
             services.AddScoped<IUserUserRolesService, UserUserRolesService>();
 
-
+            services.AddScoped<IPacheteService, PacheteService>();
 
         }
 

@@ -346,6 +346,7 @@ namespace Tests
                 };
 
                 usersService.Create(added22);
+                //context.Entry(added22).State = EntityState.Detached;
 
                 var updated = new Lab3.ViewModels.UserPostModel
                 {
